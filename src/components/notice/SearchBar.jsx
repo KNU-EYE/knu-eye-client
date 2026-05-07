@@ -15,7 +15,7 @@ function SearchBar() {
         type="search"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        placeholder="제목, 내용, 작성자 검색..."
+        placeholder="키워드, 제목, 부서 검색..."
         aria-label="공지 검색"
         className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-10 pr-4 text-sm text-slate-900 placeholder:text-slate-400 shadow-card transition focus:border-brand-300 sm:h-12 sm:text-base"
       />
