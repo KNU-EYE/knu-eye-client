@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Calendar, ExternalLink, Eye, Paperclip, X } from 'lucide-react';
+import { Calendar, ExternalLink, Eye, X } from 'lucide-react';
 import CategoryBadge from './CategoryBadge.jsx';
 import DdayBadge from './DdayBadge.jsx';
 import { formatViews } from '../../utils/format.js';
@@ -31,7 +31,6 @@ function NoticeDetailModal({ notice, onClose }) {
     createdAt,
     deadline,
     views,
-    attachments,
     category,
     content,
     sourceUrl,
@@ -72,7 +71,6 @@ function NoticeDetailModal({ notice, onClose }) {
           >
             {title}
           </h2>
-
           <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-slate-500 sm:text-sm">
             <span>{createdAt}</span>
             {deadline && (
@@ -85,12 +83,6 @@ function NoticeDetailModal({ notice, onClose }) {
               <Eye className="h-4 w-4" aria-hidden="true" />
               조회 {formatViews(views)}
             </span>
-            {attachments > 0 && (
-              <span className="inline-flex items-center gap-1">
-                <Paperclip className="h-4 w-4" aria-hidden="true" />
-                첨부 {attachments}개
-              </span>
-            )}
           </div>
 
           <div className="mt-6 space-y-4 text-sm leading-7 text-slate-700 sm:text-base">

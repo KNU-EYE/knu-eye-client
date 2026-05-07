@@ -1,10 +1,10 @@
-import { Eye, Paperclip, Calendar } from 'lucide-react';
+import { Eye, Calendar } from 'lucide-react';
 import CategoryBadge from './CategoryBadge.jsx';
 import DdayBadge from './DdayBadge.jsx';
 import { formatViews } from '../../utils/format.js';
 
 function NoticeCard({ notice, onClick }) {
-  const { title, department, createdAt, deadline, views, attachments, category, summary } =
+  const { title, department, createdAt, deadline, views, category, summary } =
     notice;
 
   const handleKeyDown = (event) => {
@@ -34,12 +34,6 @@ function NoticeCard({ notice, onClick }) {
             <Eye className="h-3 w-3" aria-hidden="true" />
             {formatViews(views)}
           </span>
-          {attachments > 0 && (
-            <span className="inline-flex items-center gap-1">
-              <Paperclip className="h-3 w-3" aria-hidden="true" />
-              {attachments}
-            </span>
-          )}
         </div>
       </div>
 
@@ -48,9 +42,9 @@ function NoticeCard({ notice, onClick }) {
         {title}
       </h3>
 
-      {/* AI 요약 - PC에서만 노출 (목록을 깔끔하게 유지) */}
+      {/*모바일에서도 똑같이 보이게 수정 */}
       {summary && (
-        <p className="mt-2 hidden text-sm leading-relaxed text-slate-600 line-clamp-2 sm:block">
+        <p className="mt-2 hiddenn text-sm leading-relaxed text-slate-600 line-clamp-3 sm:block">
           {summary}
         </p>
       )}
