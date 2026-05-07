@@ -1,8 +1,8 @@
 import { CATEGORIES } from '../constants/categories.js';
 
-// 메인 페이지 목업 데이터 (이미지 기반 8개)
+// 메인 페이지 목업 데이터
 // 추후 백엔드 API 연동 시 제거 예정
-export const MOCK_NOTICES = [
+const BASE_NOTICES = [
   {
     id: 1,
     category: CATEGORIES.JOB,
@@ -11,6 +11,8 @@ export const MOCK_NOTICES = [
     createdAt: '2026-04-04',
     deadline: '2026-04-10',
     views: 5200,
+    attachments: 1,
+    keywords: ['채용', '삼성전자', '모의면접', '취업', '테스트키워드'],
     summary:
       '삼성전자 인사담당자가 직접 진행하는 채용설명회와 1:1 모의면접 프로그램. 사전 신청자에 한해 참여 가능하며, 우수 참여자에게는 인턴십 추천서가 제공됩니다.',
     content: [
@@ -28,6 +30,8 @@ export const MOCK_NOTICES = [
     createdAt: '2026-04-03',
     deadline: '2026-04-25',
     views: 3200,
+    attachments: 2,
+    keywords: ['창업', '경진대회', '아이디어', '상금'],
     summary:
       '경북대학교 재학생/휴학생/대학원생 누구나 참여 가능한 창업 아이디어 경진대회. 총상금 3,000만원 규모이며 우수팀에게는 창업보육센터 입주 기회가 부여됩니다.',
     content: [
@@ -45,6 +49,8 @@ export const MOCK_NOTICES = [
     createdAt: '2026-04-02',
     deadline: '2026-04-18',
     views: 1900,
+    attachments: 2,
+    keywords: ['장학', 'SW', '등록금', 'IT대학'],
     summary:
       'SW 분야 우수 인재를 발굴하기 위한 SW특기자 장학생 선발. 알고리즘/오픈소스/서비스 개발 실적 보유자 우대. 학기당 등록금 전액 지원.',
     content: [
@@ -62,6 +68,8 @@ export const MOCK_NOTICES = [
     createdAt: '2026-04-01',
     deadline: '2026-04-15',
     views: 2800,
+    attachments: 2,
+    keywords: ['장학', '국가장학금', '등록금', '한국장학재단'],
     summary:
       '한국장학재단 국가장학금(I/II 유형) 신청 일정 안내. 학자금 지원구간 산정 및 가구원 동의 절차 필수. 미신청 시 등록금 감면 불가.',
     content: [
@@ -79,6 +87,8 @@ export const MOCK_NOTICES = [
     createdAt: '2026-03-30',
     deadline: '2026-04-20',
     views: 2900,
+    attachments: 3,
+    keywords: ['교환학생', '해외파견', '국제교류', '어학성적'],
     summary:
       '미국/일본/독일/중국 등 25개국 70여개 협정 대학 교환학생 모집. 선발 시 학점인정 및 항공료 일부 지원. TOEFL/IELTS 또는 어학원 자격 필수.',
     content: [
@@ -96,6 +106,8 @@ export const MOCK_NOTICES = [
     createdAt: '2026-03-28',
     deadline: '2026-04-12',
     views: 1500,
+    attachments: 3,
+    keywords: ['캡스톤', '경진대회', '공학대학', '특허'],
     summary:
       '공학대학 재학생 대상 캡스톤 디자인 경진대회 참가 팀 모집. 산학협력 과제 우대 및 우수작품은 특허 출원 비용 지원.',
     content: [
@@ -113,6 +125,8 @@ export const MOCK_NOTICES = [
     createdAt: '2026-03-27',
     deadline: null,
     views: 1500,
+    attachments: 2,
+    keywords: ['유학생', '비자', '멘토링', '한국어'],
     summary:
       '외국인 유학생을 위한 비자 연장, 의료보험, 한국어 교실, 멘토링 프로그램 등 학기 중 운영 프로그램 종합 안내.',
     content: [
@@ -130,6 +144,8 @@ export const MOCK_NOTICES = [
     createdAt: '2026-03-25',
     deadline: '2026-04-08',
     views: 4500,
+    attachments: 1,
+    keywords: ['기숙사', '생활관', '입사신청', '재학생'],
     summary:
       '재학생 대상 기숙사 입사 신청. 직전 학기 학점/거주지 기준으로 선발하며, 우선선발 대상자(국가유공자/장애학생 등)는 별도 서류 제출 필요.',
     content: [
@@ -140,3 +156,137 @@ export const MOCK_NOTICES = [
     sourceUrl: 'https://dorm.knu.ac.kr/',
   },
 ];
+
+const GENERATED_NOTICE_BLUEPRINTS = [
+  {
+    category: CATEGORIES.JOB,
+    title: '[인재개발원] 2026 상반기 공기업 취업 특강',
+    department: '인재개발원',
+    keywords: ['취업', '공기업', 'NCS', '특강'],
+    summary:
+      '공기업 취업을 준비하는 학생을 위한 NCS 전략, 자기소개서 작성, 면접 준비 특강입니다.',
+  },
+  {
+    category: CATEGORIES.SCHOLARSHIP,
+    title: '지역인재 장학금 신규 신청 안내',
+    department: '학생지원팀',
+    keywords: ['장학', '지역인재', '등록금', '신청'],
+    summary:
+      '지역 우수 인재의 학업 지속을 지원하기 위한 장학금 신청 일정과 제출 서류 안내입니다.',
+  },
+  {
+    category: CATEGORIES.ACADEMIC,
+    title: '2026학년도 여름 계절학기 수강 신청 안내',
+    department: '학사과',
+    keywords: ['수강신청', '계절학기', '학사', '여름학기'],
+    summary:
+      '여름 계절학기 개설 교과목, 수강 신청 기간, 수강료 납부 일정을 안내합니다.',
+  },
+  {
+    category: CATEGORIES.EVENT,
+    title: 'KNU 문화주간 학생 공연팀 모집',
+    department: '학생문화센터',
+    keywords: ['행사', '공연', '문화주간', '모집'],
+    summary:
+      '캠퍼스 문화주간 무대에 참여할 밴드, 댄스, 연극 등 학생 공연팀을 모집합니다.',
+  },
+  {
+    category: CATEGORIES.GLOBAL,
+    title: '글로벌 버디 프로그램 참가자 모집',
+    department: '국제교류본부',
+    keywords: ['국제교류', '버디', '유학생', '멘토링'],
+    summary:
+      '외국인 유학생의 학교 생활 적응을 돕는 글로벌 버디 프로그램 참가자를 모집합니다.',
+  },
+  {
+    category: CATEGORIES.DORM,
+    title: '생활관 시설 점검 및 임시 출입 제한 안내',
+    department: '생활관지원팀',
+    keywords: ['기숙사', '생활관', '시설점검', '출입제한'],
+    summary:
+      '생활관 공용 시설 안전 점검으로 일부 구역 출입이 제한되며 점검 일정을 안내합니다.',
+  },
+  {
+    category: CATEGORIES.JOB,
+    title: '[현장실습지원센터] 하계 표준현장실습학기제 모집',
+    department: '현장실습지원센터',
+    keywords: ['현장실습', '인턴십', '취업', '하계'],
+    summary:
+      '하계 방학 중 기업 현장에서 직무 경험을 쌓을 수 있는 표준현장실습학기제 참여 학생을 모집합니다.',
+  },
+  {
+    category: CATEGORIES.SCHOLARSHIP,
+    title: '근로장학생 추가 선발 공고',
+    department: '학생지원팀',
+    keywords: ['장학', '근로장학생', '선발', '학생지원'],
+    summary:
+      '교내 행정부서와 부속기관에서 근무할 근로장학생 추가 선발 계획을 안내합니다.',
+  },
+  {
+    category: CATEGORIES.ACADEMIC,
+    title: '복수전공 및 부전공 신청 기간 안내',
+    department: '학사과',
+    keywords: ['복수전공', '부전공', '학사', '신청'],
+    summary:
+      '2026학년도 복수전공 및 부전공 신청 자격, 신청 방법, 결과 발표 일정을 안내합니다.',
+  },
+  {
+    category: CATEGORIES.EVENT,
+    title: '캠퍼스 플리마켓 셀러 모집',
+    department: '총학생회',
+    keywords: ['행사', '플리마켓', '셀러', '캠퍼스'],
+    summary:
+      '학생들이 직접 물품과 창작물을 판매할 수 있는 캠퍼스 플리마켓 셀러를 모집합니다.',
+  },
+  {
+    category: CATEGORIES.GLOBAL,
+    title: '해외 단기어학연수 설명회 개최',
+    department: '국제교류본부',
+    keywords: ['어학연수', '해외파견', '국제교류', '설명회'],
+    summary:
+      '방학 중 해외 대학에서 진행되는 단기어학연수 프로그램 설명회 일정을 안내합니다.',
+  },
+  {
+    category: CATEGORIES.DORM,
+    title: '생활관 식당 만족도 조사 참여 안내',
+    department: '생활관지원팀',
+    keywords: ['기숙사', '식당', '만족도조사', '생활관'],
+    summary:
+      '생활관 식당 운영 개선을 위한 학생 만족도 조사를 실시합니다.',
+  },
+];
+
+function formatMockDate(date) {
+  return date.toISOString().slice(0, 10);
+}
+
+const GENERATED_NOTICES = Array.from({ length: 192 }, (_, index) => {
+  const blueprint = GENERATED_NOTICE_BLUEPRINTS[index % GENERATED_NOTICE_BLUEPRINTS.length];
+  const createdAt = new Date(Date.UTC(2026, 2, 24 - index));
+  const deadline =
+    index % 5 === 0
+      ? null
+      : formatMockDate(new Date(Date.UTC(2026, 3, 8 + (index % 24))));
+  const round = Math.floor(index / GENERATED_NOTICE_BLUEPRINTS.length) + 1;
+
+  return {
+    id: BASE_NOTICES.length + index + 1,
+    category: blueprint.category,
+    title: `${blueprint.title} ${round > 1 ? `(${round}차)` : ''}`.trim(),
+    department: blueprint.department,
+    createdAt: formatMockDate(createdAt),
+    deadline,
+    views: 900 + ((index * 347) % 6200),
+    attachments: index % 4,
+    keywords: blueprint.keywords,
+    summary: blueprint.summary,
+    content: [
+      `${blueprint.department}에서는 관련 학생을 대상으로 공지된 프로그램을 운영합니다.`,
+      '참여를 희망하는 학생은 신청 기간, 제출 서류, 세부 자격을 확인한 뒤 기한 내 신청해 주세요.',
+      '본 상세 내용은 무한 스크롤과 모달 동작 확인을 위한 프로토타입 목업 데이터입니다.',
+    ],
+    sourceUrl: 'https://www.knu.ac.kr/',
+  };
+});
+
+export const MOCK_NOTICES = [...BASE_NOTICES, ...GENERATED_NOTICES];
