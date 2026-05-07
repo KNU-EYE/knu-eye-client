@@ -1,6 +1,6 @@
 import NoticeCard from './NoticeCard.jsx';
 
-function NoticeList({ notices }) {
+function NoticeList({ notices, onSelectNotice }) {
   if (!notices || notices.length === 0) {
     return (
       <div className="card flex min-h-[200px] flex-col items-center justify-center text-center">
@@ -18,7 +18,7 @@ function NoticeList({ notices }) {
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
       {notices.map((n) => (
-        <NoticeCard key={n.id} notice={n} />
+        <NoticeCard key={n.id} notice={n} onClick={() => onSelectNotice(n)} />
       ))}
     </div>
   );

@@ -1,10 +1,12 @@
-import { useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import SearchBar from '../components/notice/SearchBar.jsx';
 import FilterBar from '../components/notice/FilterBar.jsx';
 import NoticeList from '../components/notice/NoticeList.jsx';
+import NoticeDetailModal from '../components/notice/NoticeDetailModal.jsx';
 import useNoticeStore from '../store/useNoticeStore.js';
 
 function HomePage() {
+  const [selectedNotice, setSelectedNotice] = useState(null);
   const searchQuery = useNoticeStore((s) => s.searchQuery);
   const selectedCategories = useNoticeStore((s) => s.selectedCategories);
   const sortBy = useNoticeStore((s) => s.sortBy);
@@ -16,6 +18,10 @@ function HomePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [searchQuery, selectedCategories, sortBy, getFilteredNotices],
   );
+
+  const closeNoticeDetail = useCallback(() => {
+    setSelectedNotice(null);
+  }, []);
 
   return (
     <div className="container-page py-5 sm:py-8">
@@ -40,7 +46,9 @@ function HomePage() {
       </div>
 
       {/* 공지 카드 리스트 */}
-      <NoticeList notices={notices} />
+      <NoticeList notices={notices} onSelectNotice={setSelectedNotice} />
+
+      <NoticeDetailModal notice={selectedNotice} onClose={closeNoticeDetail} />
     </div>
   );
 }

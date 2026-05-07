@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { LogIn } from 'lucide-react';
+// import { LogIn } from 'lucide-react';
 
 function Header() {
   return (
@@ -18,10 +18,10 @@ function Header() {
         </Link>
 
         {/* 추후 로그인 기능 연결 예정 */}
-        <button type="button" className="btn-primary" aria-label="로그인">
+        {/* <button type="button" className="btn-primary" aria-label="로그인">
           <LogIn className="h-4 w-4" />
           <span>로그인</span>
-        </button>
+        </button> */}
       </div>
     </header>
   );

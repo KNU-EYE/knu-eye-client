@@ -3,12 +3,26 @@ import CategoryBadge from './CategoryBadge.jsx';
 import DdayBadge from './DdayBadge.jsx';
 import { formatViews } from '../../utils/format.js';
 
-function NoticeCard({ notice }) {
+function NoticeCard({ notice, onClick }) {
   const { title, department, createdAt, deadline, views, attachments, category, summary } =
     notice;
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      onClick?.();
+    }
+  };
+
   return (
-    <article className="card card-hover cursor-pointer">
+    <article
+      className="card card-hover cursor-pointer"
+      role="button"
+      tabIndex={0}
+      onClick={onClick}
+      onKeyDown={handleKeyDown}
+      aria-label={`${title} 상세 보기`}
+    >
       {/* 상단: 카테고리 + D-day + 통계 */}
       <div className="flex items-start gap-2">
         <div className="flex flex-wrap items-center gap-1.5">
