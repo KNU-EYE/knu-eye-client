@@ -38,8 +38,8 @@ const useNoticeStore = create((set, get) => ({
       const matchesQuery =
         !q ||
         n.title.toLowerCase().includes(q) ||
-        n.summary.toLowerCase().includes(q) ||
-        n.department.toLowerCase().includes(q);
+        n.department.toLowerCase().includes(q) ||
+        n.keywords?.some((keyword) => keyword.toLowerCase().includes(q));
       const matchesCategory =
         selectedCategories.length === 0 || selectedCategories.includes(n.category);
       return matchesQuery && matchesCategory;

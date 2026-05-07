@@ -1,12 +1,16 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import SearchBar from '../components/notice/SearchBar.jsx';
 import FilterBar from '../components/notice/FilterBar.jsx';
 import NoticeList from '../components/notice/NoticeList.jsx';
 import NoticeDetailModal from '../components/notice/NoticeDetailModal.jsx';
 import useNoticeStore from '../store/useNoticeStore.js';
 
+const NOTICE_PAGE_SIZE = 12;
+
 function HomePage() {
   const [selectedNotice, setSelectedNotice] = useState(null);
+  const [visibleCount, setVisibleCount] = useState(NOTICE_PAGE_SIZE);
+  const loadMoreRef = useRef(null);
   const searchQuery = useNoticeStore((s) => s.searchQuery);
   const selectedCategories = useNoticeStore((s) => s.selectedCategories);
   const sortBy = useNoticeStore((s) => s.sortBy);
@@ -18,6 +22,37 @@ function HomePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [searchQuery, selectedCategories, sortBy, getFilteredNotices],
   );
+
+  const visibleNotices = useMemo(
+    () => notices.slice(0, visibleCount),
+    [notices, visibleCount],
+  );
+
+  const hasMore = visibleCount < notices.length;
+
+  useEffect(() => {
+    setVisibleCount(NOTICE_PAGE_SIZE);
+  }, [searchQuery, selectedCategories, sortBy]);
+
+  useEffect(() => {
+    const target = loadMoreRef.current;
+    if (!target || !hasMore) return undefined;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        setVisibleCount((currentCount) =>
+          Math.min(currentCount + NOTICE_PAGE_SIZE, notices.length),
+        );
+      },
+      { rootMargin: '240px 0px' },
+    );
+
+    observer.observe(target);
+
+    return () => observer.disconnect();
+  }, [hasMore, notices.length]);
 
   const closeNoticeDetail = useCallback(() => {
     setSelectedNotice(null);
@@ -46,7 +81,13 @@ function HomePage() {
       </div>
 
       {/* 공지 카드 리스트 */}
-      <NoticeList notices={notices} onSelectNotice={setSelectedNotice} />
+      <NoticeList notices={visibleNotices} onSelectNotice={setSelectedNotice} />
+
+      {notices.length > 0 && (
+        <div ref={loadMoreRef} className="py-6 text-center text-xs text-slate-500">
+          {hasMore ? '공지 더 불러오는 중...' : '마지막 공지입니다.'}
+        </div>
+      )}
 
       <NoticeDetailModal notice={selectedNotice} onClose={closeNoticeDetail} />
     </div>
