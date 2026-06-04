@@ -8,6 +8,7 @@ import useNoticeStore from '../store/useNoticeStore.js';
 function HomePage() {
   const [selectedNotice, setSelectedNotice] = useState(null);
   const loadMoreRef = useRef(null);
+  const loadedNotices = useNoticeStore((s) => s.notices);
   const searchQuery = useNoticeStore((s) => s.searchQuery);
   const selectedCategories = useNoticeStore((s) => s.selectedCategories);
   const sortBy = useNoticeStore((s) => s.sortBy);
@@ -22,7 +23,7 @@ function HomePage() {
   const notices = useMemo(
     () => getFilteredNotices(),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [searchQuery, selectedCategories, sortBy, getFilteredNotices],
+    [loadedNotices, searchQuery, selectedCategories, sortBy, getFilteredNotices],
   );
 
   useEffect(() => {
