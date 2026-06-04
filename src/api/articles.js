@@ -1,6 +1,3 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ?? 'http://3.37.123.248:8080';
-
 function toDateOnly(value) {
   if (!value) return null;
   return String(value).slice(0, 10);
@@ -70,7 +67,7 @@ export async function fetchArticles({ cursor, search, signal } = {}) {
   if (search?.trim()) params.set('search', search.trim());
 
   const query = params.toString();
-  const response = await fetch(`${API_BASE_URL}/api/articles${query ? `?${query}` : ''}`, {
+  const response = await fetch(`/api/articles${query ? `?${query}` : ''}`, {
     signal,
   });
 
