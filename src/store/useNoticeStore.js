@@ -1,12 +1,16 @@
 import { create } from 'zustand';
-import { MOCK_NOTICES } from '../mocks/notices.js';
+import { fetchArticles } from '../api/articles.js';
 
 // 공지 리스트와 검색/필터/정렬 상태 관리
-// 추후 fetch 액션을 추가해 API 데이터로 교체 예정
+let latestRequestId = 0;
+
 const useNoticeStore = create((set, get) => ({
-  notices: MOCK_NOTICES,
+  notices: [],
   loading: false,
   error: null,
+  initialized: false,
+  hasNext: true,
+  nextCursor: null,
 
   // 검색/필터 상태
   searchQuery: '',
@@ -29,20 +33,66 @@ const useNoticeStore = create((set, get) => ({
 
   setSortBy: (sortBy) => set({ sortBy }),
 
+  loadArticles: async ({ reset = false } = {}) => {
+    const state = get();
+    if (!reset && (state.loading || !state.hasNext)) return;
+
+    const requestId = ++latestRequestId;
+    const cursor = reset ? null : state.nextCursor;
+
+    set({
+      loading: true,
+      error: null,
+      ...(reset
+        ? {
+            notices: [],
+            hasNext: true,
+            nextCursor: null,
+          }
+        : {}),
+    });
+
+    try {
+      const data = await fetchArticles({
+        cursor,
+        search: state.searchQuery,
+      });
+
+      if (requestId !== latestRequestId) return;
+
+      set((currentState) => {
+        const previousNotices = reset ? [] : currentState.notices;
+        const noticeMap = new Map(
+          [...previousNotices, ...data.items].map((notice) => [notice.id, notice]),
+        );
+
+        return {
+          notices: [...noticeMap.values()],
+          hasNext: data.hasNext,
+          nextCursor: data.nextCursor,
+          loading: false,
+          initialized: true,
+        };
+      });
+    } catch (error) {
+      if (requestId !== latestRequestId) return;
+
+      set({
+        loading: false,
+        initialized: true,
+        error: error.message ?? '공지 목록을 불러오지 못했습니다.',
+      });
+    }
+  },
+
   // 필터링/정렬된 결과 계산 (selector)
   getFilteredNotices: () => {
-    const { notices, searchQuery, selectedCategories, sortBy } = get();
-    const q = searchQuery.trim().toLowerCase();
+    const { notices, selectedCategories, sortBy } = get();
 
     let result = notices.filter((n) => {
-      const matchesQuery =
-        !q ||
-        n.title.toLowerCase().includes(q) ||
-        n.department.toLowerCase().includes(q) ||
-        n.keywords?.some((keyword) => keyword.toLowerCase().includes(q));
       const matchesCategory =
         selectedCategories.length === 0 || selectedCategories.includes(n.category);
-      return matchesQuery && matchesCategory;
+      return matchesCategory;
     });
 
     if (sortBy === 'latest') {

@@ -5,15 +5,17 @@ import NoticeList from '../components/notice/NoticeList.jsx';
 import NoticeDetailModal from '../components/notice/NoticeDetailModal.jsx';
 import useNoticeStore from '../store/useNoticeStore.js';
 
-const NOTICE_PAGE_SIZE = 12;
-
 function HomePage() {
   const [selectedNotice, setSelectedNotice] = useState(null);
-  const [visibleCount, setVisibleCount] = useState(NOTICE_PAGE_SIZE);
   const loadMoreRef = useRef(null);
   const searchQuery = useNoticeStore((s) => s.searchQuery);
   const selectedCategories = useNoticeStore((s) => s.selectedCategories);
   const sortBy = useNoticeStore((s) => s.sortBy);
+  const loading = useNoticeStore((s) => s.loading);
+  const error = useNoticeStore((s) => s.error);
+  const initialized = useNoticeStore((s) => s.initialized);
+  const hasNext = useNoticeStore((s) => s.hasNext);
+  const loadArticles = useNoticeStore((s) => s.loadArticles);
   const getFilteredNotices = useNoticeStore((s) => s.getFilteredNotices);
 
   // store 의 selector 가 함수형이라 React 가 변경을 감지하도록 deps 로 한번 더 묶어줌
@@ -23,28 +25,22 @@ function HomePage() {
     [searchQuery, selectedCategories, sortBy, getFilteredNotices],
   );
 
-  const visibleNotices = useMemo(
-    () => notices.slice(0, visibleCount),
-    [notices, visibleCount],
-  );
-
-  const hasMore = visibleCount < notices.length;
-
   useEffect(() => {
-    setVisibleCount(NOTICE_PAGE_SIZE);
-  }, [searchQuery, selectedCategories, sortBy]);
+    const timeoutId = window.setTimeout(() => {
+      loadArticles({ reset: true });
+    }, 300);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [searchQuery, loadArticles]);
 
   useEffect(() => {
     const target = loadMoreRef.current;
-    if (!target || !hasMore) return undefined;
+    if (!target || loading || !hasNext) return undefined;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
-
-        setVisibleCount((currentCount) =>
-          Math.min(currentCount + NOTICE_PAGE_SIZE, notices.length),
-        );
+        loadArticles();
       },
       { rootMargin: '240px 0px' },
     );
@@ -52,7 +48,7 @@ function HomePage() {
     observer.observe(target);
 
     return () => observer.disconnect();
-  }, [hasMore, notices.length]);
+  }, [hasNext, loadArticles, loading, notices.length]);
 
   const closeNoticeDetail = useCallback(() => {
     setSelectedNotice(null);
@@ -66,7 +62,8 @@ function HomePage() {
           공지사항
         </h1>
         <p className="mt-1 text-xs text-slate-500 sm:text-sm">
-          총 <span className="font-semibold text-brand-700">{notices.length}</span>개
+          불러온 공지{' '}
+          <span className="font-semibold text-brand-700">{notices.length}</span>개
         </p>
       </div>
 
@@ -81,11 +78,34 @@ function HomePage() {
       </div>
 
       {/* 공지 카드 리스트 */}
-      <NoticeList notices={visibleNotices} onSelectNotice={setSelectedNotice} />
+      {error && (
+        <div className="card mb-4 flex items-center justify-between gap-4 border-red-200 bg-red-50">
+          <p className="text-sm text-red-700">{error}</p>
+          <button
+            type="button"
+            className="btn-ghost shrink-0"
+            onClick={() => loadArticles({ reset: true })}
+          >
+            다시 시도
+          </button>
+        </div>
+      )}
 
-      {notices.length > 0 && (
+      {loading && notices.length === 0 ? (
+        <div className="card flex min-h-[200px] items-center justify-center text-sm text-slate-500">
+          공지 목록을 불러오는 중입니다...
+        </div>
+      ) : (
+        <NoticeList notices={notices} onSelectNotice={setSelectedNotice} />
+      )}
+
+      {initialized && notices.length > 0 && (
         <div ref={loadMoreRef} className="py-6 text-center text-xs text-slate-500">
-          {hasMore ? '공지 더 불러오는 중...' : '마지막 공지입니다.'}
+          {loading
+            ? '공지 더 불러오는 중...'
+            : hasNext
+              ? '아래로 스크롤하면 공지를 더 불러옵니다.'
+              : '마지막 공지입니다.'}
         </div>
       )}
 
